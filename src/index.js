@@ -29,16 +29,15 @@ app.get("/", (req, res) => res.send("hi"));
 
 app.get("/crumbs", auth, async (req, res) => {
   try {
-    console.log("talking to crumbs");
     const query = `
-    SELECT * from crumb WHERE userid = $1 AND latitude != -1 AND longitude != -1
+    SELECT * from crumb WHERE "userId" = $1 AND latitude != -1 AND longitude != -1 AND "createdAt" > NOW() - INTERVAL '1 day'
     `;
 
     const data = await db.query(query, [req.user.id]);
 
-    console.log("data: ", data);
     res.send(data.rows);
   } catch (err) {
+    console.error(err);
     res.status(500).send("Internal server error");
   }
 });
@@ -69,7 +68,7 @@ app.post("/crumbs", auth, (req, res, next) => {
     });
 
     const query = `
-    INSERT INTO crumb (latitude, longitude, satellitesUsed, hdop, utcTime, userid) 
+    INSERT INTO crumb (latitude, longitude, "satellitesUsed", hdop, "utcTime", "userId") 
     VALUES ${placeholders.join(",")}
     `;
 
@@ -88,5 +87,7 @@ app.post("/crumbs", auth, (req, res, next) => {
 });
 
 app.listen(3000, () => {
+  // db.connect();
+
   console.log("All 3000 ears");
 });
