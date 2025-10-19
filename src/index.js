@@ -88,6 +88,5 @@ app.post("/crumbs", auth, (req, res, next) => {
 });
 
 app.listen(3000, () => {
-  db.connect();
   console.log("All 3000 ears");
 });
