@@ -29,12 +29,14 @@ app.get("/", (req, res) => res.send("hi"));
 
 app.get("/crumbs", auth, async (req, res) => {
   try {
+    console.log("talking to crumbs");
     const query = `
     SELECT * from crumb WHERE userid = $1 AND latitude != -1 AND longitude != -1
     `;
 
     const data = await db.query(query, [req.user.id]);
 
+    console.log("data: ", data);
     res.send(data.rows);
   } catch (err) {
     res.status(500).send("Internal server error");

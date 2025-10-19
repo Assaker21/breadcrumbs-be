@@ -7,7 +7,7 @@ export default async function auth(req, res, next) {
     return res.status(401).send("Nope");
   }
 
-  const response = await db.query('SELECT * FROM "user" WHERE "apikey" = $1', [
+  const response = await db.query('SELECT * FROM "user" WHERE "apiKey" = $1', [
     apiKey,
   ]);
 
